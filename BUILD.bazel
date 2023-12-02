@@ -1,0 +1,18 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load("@advent_2023_pip//:requirements.bzl", "requirement")
+load("@python_versions//3.11:defs.bzl", "compile_pip_requirements")
+
+compile_pip_requirements(
+    name = "deps",
+    src = "requirements.in",
+    requirements_txt = "requirements_lock.txt",
+)
+
+py_binary(
+    name = "advent_2023",
+    srcs = ["main.py"],
+    main = "main.py",
+    deps = [
+        requirement("absl-py"),
+    ],
+)
