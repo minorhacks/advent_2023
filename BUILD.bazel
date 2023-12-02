@@ -12,7 +12,12 @@ py_binary(
     name = "advent_2023",
     srcs = ["main.py"],
     main = "main.py",
+    data = [
+        "//input",
+    ],
     deps = [
+        "//challenges:all",
         requirement("absl-py"),
+        requirement("bazel-runfiles"),
     ],
 )

@@ -1,0 +1,32 @@
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load("@advent_2023_pip//:requirements.bzl", "requirement")
+
+_DAYS = [
+    "01",
+]
+
+py_library(
+    name = "all",
+    deps = [":day_{}".format(d) for d in _DAYS],
+    visibility = ["//visibility:public"],
+)
+
+[
+    py_library(
+        name = "day_{}".format(d),
+        srcs = ["day_{}.py".format(d)],
+    )
+    for d in _DAYS
+]
+
+[
+    py_test(
+        name = "day_{}_test".format(d),
+        srcs = ["day_{}_test.py".format(d)],
+        deps = [
+            ":day_{}".format(d),
+            requirement("absl-py"),
+        ]
+    )
+    for d in _DAYS
+]
