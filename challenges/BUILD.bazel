@@ -1,14 +1,15 @@
-load("@rules_python//python:defs.bzl", "py_library", "py_test")
 load("@advent_2023_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 _DAYS = [
     "01",
+    "02",
 ]
 
 py_library(
     name = "all",
-    deps = [":day_{}".format(d) for d in _DAYS],
     visibility = ["//visibility:public"],
+    deps = [":day_{}".format(d) for d in _DAYS],
 )
 
 [
@@ -26,7 +27,7 @@ py_library(
         deps = [
             ":day_{}".format(d),
             requirement("absl-py"),
-        ]
+        ],
     )
     for d in _DAYS
 ]
