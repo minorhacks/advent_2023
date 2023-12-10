@@ -4,6 +4,7 @@ load("@rules_python//python:defs.bzl", "py_library", "py_test")
 _DAYS = [
     "01",
     "02",
+    "03",
 ]
 
 py_library(
