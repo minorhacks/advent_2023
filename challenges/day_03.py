@@ -14,28 +14,26 @@ class Num:
     @classmethod
     def from_str(cls, s: str, x: int, y: int):
         l = set()
-        for i in range(len(s)):
-            l.add((x+i, y))
+        for dx in range(x-1, x+len(s)+1):
+            for dy in range(y-1, y+2):
+                l.add((dx, dy))
         return cls(int(s), l)
 
     def num(self) -> int:
         return int(self.val)
 
 @dataclasses.dataclass
-class Parts:
-    adjacent: set[tuple[int, int]]
-
-    def add(self, x: int, y: int):
-        for dx in range(max(0, x-1), x+2):
-            for dy in range(max(0, y-1), y+2):
-                self.adjacent.add((dx, dy))
+class Part:
+    symbol: str
+    x: int
+    y: int
 
     def labeled_by(self, num: Num) -> bool:
-        return len(self.adjacent.intersection(num.locations)) > 0
+        return (self.x, self.y) in num.locations
 
-def part_1(input: io.TextIOBase) -> str:
+def parse(input: io.TextIOBase) -> tuple[list[Num], list[Part]]:
     nums = []
-    parts = Parts(set())
+    parts = []
 
     line_num = 0
     while (line := input.readline()) != "":
@@ -44,18 +42,31 @@ def part_1(input: io.TextIOBase) -> str:
             nums.append(Num.from_str(line[match.start():match.end()], match.start(), line_num))
         for match in _PART_RE.finditer(line):
             log.debug("Found part %s at line %d pos %d", match.group(), line_num, match.start())
-            parts.add(match.start(), line_num)
+            parts.append(Part(match.group(), match.start(), line_num))
 
         line_num +=1
+    
+    return nums, parts
+
+
+def part_1(input: io.TextIOBase) -> str:
+    nums, parts = parse(input)
 
     for n in nums:
-        if parts.labeled_by(n):
+        if any(p.labeled_by(n) for p in parts):
             log.debug("num %d is a part number", n.num())
         else:
             log.debug("num %d is not a part number", n.num())
 
-    return sum(n.num() for n in nums if parts.labeled_by(n))
+    return sum(n.num() for n in nums if any(p.labeled_by(n) for p in parts))
 
 
 def part_2(input: io.TextIOBase) -> str:
-    pass
+    nums, parts = parse(input)
+
+    total = 0
+    gears = list(p for p in parts if p.symbol == "*" and len([n for n in nums if p.labeled_by(n)]) == 2)
+    for g in gears:
+        n1, n2 = (n for n in nums if g.labeled_by(n))
+        total += n1.num() * n2.num()
+    return total

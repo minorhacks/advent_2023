@@ -24,5 +24,22 @@ class TestDay03(absltest.TestCase):
         ).strip()
         self.assertEqual(4361, day_03.part_1(io.StringIO(sample)))
 
+    def test_part_2(self):
+        sample = textwrap.dedent(
+            """
+            467..114..
+            ...*......
+            ..35..633.
+            ......#...
+            617*......
+            .....+.58.
+            ..592.....
+            ......755.
+            ...$.*....
+            .664.598..
+            """
+        ).strip()
+        self.assertEqual(467835, day_03.part_2(io.StringIO(sample)))
+
 if __name__ == "__main__":
     absltest.main()
